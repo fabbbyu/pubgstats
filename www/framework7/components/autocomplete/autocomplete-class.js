@@ -14,9 +14,6 @@ class Autocomplete extends Framework7Class {
       on: {},
     }, app.params.autocomplete);
 
-    if (typeof defaults.searchbarDisableButton === 'undefined') {
-      defaults.searchbarDisableButton = app.theme !== 'aurora';
-    }
 
     // Extend defaults with modules params
     ac.useModulesParams(defaults);
@@ -197,9 +194,7 @@ class Autocomplete extends Framework7Class {
     }
     function onInputBlur() {
       if (ac.$dropdownEl.find('label.active-state').length > 0) return;
-      setTimeout(() => {
-        ac.close();
-      }, 0);
+      ac.close();
     }
     function onResize() {
       ac.positionDropdown();
@@ -211,7 +206,7 @@ class Autocomplete extends Framework7Class {
         ac.$inputEl.blur();
       }
     }
-    function onDropdownClick() {
+    function onDropdownclick() {
       const $clickedEl = $(this);
       let clickedItem;
       for (let i = 0; i < ac.items.length; i += 1) {
@@ -227,6 +222,7 @@ class Autocomplete extends Framework7Class {
       }
       ac.value = [clickedItem];
       ac.emit('local::change autocompleteChange', [clickedItem]);
+
       ac.close();
     }
 
@@ -265,11 +261,11 @@ class Autocomplete extends Framework7Class {
       }
     };
     ac.attachDropdownEvents = function attachDropdownEvents() {
-      ac.$dropdownEl.on('click', 'label', onDropdownClick);
+      ac.$dropdownEl.on('click', 'label', onDropdownclick);
       app.on('resize', onResize);
     };
     ac.detachDropdownEvents = function detachDropdownEvents() {
-      ac.$dropdownEl.off('click', 'label', onDropdownClick);
+      ac.$dropdownEl.off('click', 'label', onDropdownclick);
       app.off('resize', onResize);
     };
 
@@ -423,7 +419,7 @@ class Autocomplete extends Framework7Class {
   renderPreloader() {
     const ac = this;
     return `
-      <div class="autocomplete-preloader preloader ${ac.params.preloaderColor ? `color-${ac.params.preloaderColor}` : ''}">${Utils[`${ac.app.theme}PreloaderContent`] || ''}</div>
+      <div class="autocomplete-preloader preloader ${ac.params.preloaderColor ? `color-${ac.params.preloaderColor}` : ''}">${ac.app.theme === 'md' ? Utils.mdPreloaderContent : ''}</div>
     `.trim();
   }
 
@@ -438,9 +434,7 @@ class Autocomplete extends Framework7Class {
             <i class="searchbar-icon"></i>
             <span class="input-clear-button"></span>
           </div>
-          ${ac.params.searchbarDisableButton ? `
           <span class="searchbar-disable-button">${ac.params.searchbarDisableText}</span>
-          ` : ''}
         </div>
       </form>
     `.trim();
@@ -498,8 +492,8 @@ class Autocomplete extends Framework7Class {
       pageTitle = ac.$openerEl.find('.item-title').text().trim();
     }
     const navbarHtml = `
-      <div class="navbar ${ac.params.navbarColorTheme ? `color-${ac.params.navbarColorTheme}` : ''}">
-        <div class="navbar-inner ${ac.params.navbarColorTheme ? `color-${ac.params.navbarColorTheme}` : ''}">
+      <div class="navbar ${ac.params.navbarColorTheme ? `color-theme-${ac.params.navbarColorTheme}` : ''}">
+        <div class="navbar-inner ${ac.params.navbarColorTheme ? `color-theme-${ac.params.navbarColorTheme}` : ''}">
           <div class="left sliding">
             <a href="#" class="link ${ac.params.openIn === 'page' ? 'back' : 'popup-close'}" ${ac.params.openIn === 'popup' ? 'data-popup=".autocomplete-popup"' : ''}>
               <i class="icon icon-back"></i>
@@ -525,7 +519,7 @@ class Autocomplete extends Framework7Class {
     const dropdownHtml = `
       <div class="autocomplete-dropdown">
         <div class="autocomplete-dropdown-inner">
-          <div class="list ${!ac.params.expandInput ? 'no-safe-areas' : ''}">
+          <div class="list ${!ac.params.expandInput ? 'no-ios-edge' : ''}">
             <ul></ul>
           </div>
         </div>
@@ -544,7 +538,7 @@ class Autocomplete extends Framework7Class {
         ${ac.renderNavbar()}
         <div class="searchbar-backdrop"></div>
         <div class="page-content">
-          <div class="list autocomplete-list autocomplete-found autocomplete-list-${ac.id} ${ac.params.formColorTheme ? `color-${ac.params.formColorTheme}` : ''}">
+          <div class="list autocomplete-list autocomplete-found autocomplete-list-${ac.id} ${ac.params.formColorTheme ? `color-theme-${ac.params.formColorTheme}` : ''}">
             <ul></ul>
           </div>
           <div class="list autocomplete-not-found">

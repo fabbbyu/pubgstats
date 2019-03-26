@@ -97,7 +97,7 @@ const Virtual = {
     appendIndexes.forEach((index) => {
       swiper.$wrapperEl.append(renderSlide(slides[index], index));
     });
-    prependIndexes.sort((a, b) => b - a).forEach((index) => {
+    prependIndexes.sort((a, b) => a < b).forEach((index) => {
       swiper.$wrapperEl.prepend(renderSlide(slides[index], index));
     });
     swiper.$wrapperEl.children('.swiper-slide').css(offsetProp, `${offset}px`);
@@ -116,75 +116,24 @@ const Virtual = {
     if (params.cache) swiper.virtual.cache[index] = $slideEl;
     return $slideEl;
   },
-  appendSlide(slides) {
+  appendSlide(slide) {
     const swiper = this;
-    if (typeof slides === 'object' && 'length' in slides) {
-      for (let i = 0; i < slides.length; i += 1) {
-        if (slides[i]) swiper.virtual.slides.push(slides[i]);
-      }
-    } else {
-      swiper.virtual.slides.push(slides);
-    }
+    swiper.virtual.slides.push(slide);
     swiper.virtual.update(true);
   },
-  prependSlide(slides) {
+  prependSlide(slide) {
     const swiper = this;
-    const activeIndex = swiper.activeIndex;
-    let newActiveIndex = activeIndex + 1;
-    let numberOfNewSlides = 1;
-
-    if (Array.isArray(slides)) {
-      for (let i = 0; i < slides.length; i += 1) {
-        if (slides[i]) swiper.virtual.slides.unshift(slides[i]);
-      }
-      newActiveIndex = activeIndex + slides.length;
-      numberOfNewSlides = slides.length;
-    } else {
-      swiper.virtual.slides.unshift(slides);
-    }
+    swiper.virtual.slides.unshift(slide);
     if (swiper.params.virtual.cache) {
       const cache = swiper.virtual.cache;
       const newCache = {};
       Object.keys(cache).forEach((cachedIndex) => {
-        newCache[parseInt(cachedIndex, 10) + numberOfNewSlides] = cache[cachedIndex];
+        newCache[cachedIndex + 1] = cache[cachedIndex];
       });
       swiper.virtual.cache = newCache;
     }
     swiper.virtual.update(true);
-    swiper.slideTo(newActiveIndex, 0);
-  },
-  removeSlide(slidesIndexes) {
-    const swiper = this;
-    if (typeof slidesIndexes === 'undefined' || slidesIndexes === null) return;
-    let activeIndex = swiper.activeIndex;
-    if (Array.isArray(slidesIndexes)) {
-      for (let i = slidesIndexes.length - 1; i >= 0; i -= 1) {
-        swiper.virtual.slides.splice(slidesIndexes[i], 1);
-        if (swiper.params.virtual.cache) {
-          delete swiper.virtual.cache[slidesIndexes[i]];
-        }
-        if (slidesIndexes[i] < activeIndex) activeIndex -= 1;
-        activeIndex = Math.max(activeIndex, 0);
-      }
-    } else {
-      swiper.virtual.slides.splice(slidesIndexes, 1);
-      if (swiper.params.virtual.cache) {
-        delete swiper.virtual.cache[slidesIndexes];
-      }
-      if (slidesIndexes < activeIndex) activeIndex -= 1;
-      activeIndex = Math.max(activeIndex, 0);
-    }
-    swiper.virtual.update(true);
-    swiper.slideTo(activeIndex, 0);
-  },
-  removeAllSlides() {
-    const swiper = this;
-    swiper.virtual.slides = [];
-    if (swiper.params.virtual.cache) {
-      swiper.virtual.cache = {};
-    }
-    swiper.virtual.update(true);
-    swiper.slideTo(0, 0);
+    swiper.slideNext(0);
   },
 };
 
@@ -208,8 +157,6 @@ export default {
         update: Virtual.update.bind(swiper),
         appendSlide: Virtual.appendSlide.bind(swiper),
         prependSlide: Virtual.prependSlide.bind(swiper),
-        removeSlide: Virtual.removeSlide.bind(swiper),
-        removeAllSlides: Virtual.removeAllSlides.bind(swiper),
         renderSlide: Virtual.renderSlide.bind(swiper),
         slides: swiper.params.virtual.slides,
         cache: {},
@@ -227,9 +174,7 @@ export default {
       Utils.extend(swiper.params, overwriteParams);
       Utils.extend(swiper.originalParams, overwriteParams);
 
-      if (!swiper.params.initialSlide) {
-        swiper.virtual.update();
-      }
+      swiper.virtual.update();
     },
     setTranslate() {
       const swiper = this;

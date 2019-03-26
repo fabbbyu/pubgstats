@@ -14,16 +14,22 @@ var pubgApp = new Framework7({
       name: 'home',
       path: '/home/',
       templateUrl: 'home.html',
-      /*options: {
-        context: {
-          users: ['John Doe', 'Vladimir Kharlampidi', 'Timo Ernst'],
-        },
-      },*/
       on: {
         pageBeforeIn: function (e, page) {
-         
+          //pubgApp.preloader.hide();         
 
         },
+        pageInit: function (e, page) {
+
+          //pubgApp.preloader.show();
+
+          pagename = page.name;
+          //alert(page.name);
+
+          console.log("server: "+localStorage.getItem("server"));
+
+        },  
+
       }
     },
   ],
@@ -76,7 +82,6 @@ function onBackKeyDown() {
 
 function backPage(){
   mainView.router.back();
-  //marvelApp.preloader.hide(); 
 }
 
 pubgApp.navbar.hide($$('.navbar'));
@@ -92,16 +97,39 @@ $$(".item-link").each(function(){
   });
 }); 
 
+function loadHome(){
+  var server = $$("#serverIndex").val();
+  localStorage.setItem("server", server);
+
+  mainView.router.navigate({
+    name: 'home',
+    reloadCurrent: true,
+    ignoreCache: true
+  });
+}
+
+function refreshData(){
+  var server = $$("#serverHome").val();
+  localStorage.setItem("server", server);
+
+  mainView.router.navigate(mainView.router.currentRoute.url, {
+    reloadCurrent: true,
+    ignoreCache: true,
+  });
+
+}
+
+
 /*$$(".panel-left").on("click", function(){
     marvelApp.panel.close();
 });*/
-
+/*
 $$(document).click(function(event) {
-    var element = $(event.target);
+    var element = $$(event.target);
     //console.log(element.attr('class'));
     if(element.attr('class') == 'panel panel-left panel-reveal panel-active active-state'){
       pubgApp.panel.close();
     }    
-});
+});*/
 
 //***********ROUTES FIM**************//

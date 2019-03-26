@@ -52,10 +52,11 @@ const PERSIAN_MONTH_NAMES = ['فروردین', 'اردیبهشت', 'خرداد',
 const PERSIAN_NUMBERS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
 
 export default class IDate extends Date {
-  constructor (...args) {
+  constructor () {
     super()
 
     let date
+    const args = Array.from(arguments)
     if (args.length === 0) {
       date = Date.now()
     } else if (args.length === 1) {

@@ -16,7 +16,6 @@ class Framework7Component {
         $$: $,
         $dom7: $,
         $app: app,
-        $f7: app,
         $options: Utils.extend({ id }, options),
       }
     );

@@ -13,7 +13,6 @@ class ListIndex extends Framework7Class {
       indexes: 'auto', // or array of indexes
       iosItemHeight: 14,
       mdItemHeight: 14,
-      auroraItemHeight: 14,
       scrollList: true,
       label: false,
       // eslint-disable-next-line
@@ -284,7 +283,7 @@ class ListIndex extends Framework7Class {
     const index = this;
     const { app, params, el, indexes } = index;
     const height = el.offsetHeight;
-    const itemHeight = params[`${app.theme}ItemHeight`];
+    const itemHeight = app.theme === 'ios' ? params.iosItemHeight : params.mdItemHeight;
     const maxItems = Math.floor(height / itemHeight);
     const items = indexes.length;
     let skipRate = 0;

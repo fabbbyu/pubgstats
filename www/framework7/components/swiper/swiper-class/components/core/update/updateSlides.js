@@ -63,7 +63,7 @@ export default function () {
   let slideSize;
   const slidesPerColumn = params.slidesPerColumn;
   const slidesPerRow = slidesNumberEvenToRows / slidesPerColumn;
-  const numFullColumns = Math.floor(slidesLength / params.slidesPerColumn);
+  const numFullColumns = slidesPerRow - ((params.slidesPerColumn * slidesPerRow) - slidesLength);
   for (let i = 0; i < slidesLength; i += 1) {
     slideSize = 0;
     const slide = slides.eq(i);
@@ -122,29 +122,13 @@ export default function () {
       } else {
         // eslint-disable-next-line
         if (swiper.isHorizontal()) {
-          const width = parseFloat(slideStyles.getPropertyValue('width'));
-          const paddingLeft = parseFloat(slideStyles.getPropertyValue('padding-left'));
-          const paddingRight = parseFloat(slideStyles.getPropertyValue('padding-right'));
-          const marginLeft = parseFloat(slideStyles.getPropertyValue('margin-left'));
-          const marginRight = parseFloat(slideStyles.getPropertyValue('margin-right'));
-          const boxSizing = slideStyles.getPropertyValue('box-sizing');
-          if (boxSizing && boxSizing === 'border-box') {
-            slideSize = width + marginLeft + marginRight;
-          } else {
-            slideSize = width + paddingLeft + paddingRight + marginLeft + marginRight;
-          }
+          slideSize = slide[0].getBoundingClientRect().width
+            + parseFloat(slideStyles.getPropertyValue('margin-left'))
+            + parseFloat(slideStyles.getPropertyValue('margin-right'));
         } else {
-          const height = parseFloat(slideStyles.getPropertyValue('height'));
-          const paddingTop = parseFloat(slideStyles.getPropertyValue('padding-top'));
-          const paddingBottom = parseFloat(slideStyles.getPropertyValue('padding-bottom'));
-          const marginTop = parseFloat(slideStyles.getPropertyValue('margin-top'));
-          const marginBottom = parseFloat(slideStyles.getPropertyValue('margin-bottom'));
-          const boxSizing = slideStyles.getPropertyValue('box-sizing');
-          if (boxSizing && boxSizing === 'border-box') {
-            slideSize = height + marginTop + marginBottom;
-          } else {
-            slideSize = height + paddingTop + paddingBottom + marginTop + marginBottom;
-          }
+          slideSize = slide[0].getBoundingClientRect().height
+            + parseFloat(slideStyles.getPropertyValue('margin-top'))
+            + parseFloat(slideStyles.getPropertyValue('margin-bottom'));
         }
       }
       if (currentTransform) {

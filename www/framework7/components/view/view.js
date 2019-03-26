@@ -47,8 +47,6 @@ export default {
       preloadPreviousPage: true,
       allowDuplicateUrls: false,
       reloadPages: false,
-      reloadDetail: false,
-      masterDetailBreakpoint: 0,
       removeElements: true,
       removeElementsWithTimeout: false,
       removeElementsTimeout: 0,
@@ -67,11 +65,6 @@ export default {
       mdSwipeBackAnimateOpacity: false,
       mdSwipeBackActiveArea: 30,
       mdSwipeBackThreshold: 0,
-      auroraSwipeBack: false,
-      auroraSwipeBackAnimateShadow: false,
-      auroraSwipeBackAnimateOpacity: true,
-      auroraSwipeBackActiveArea: 30,
-      auroraSwipeBackThreshold: 0,
       // Push State
       pushState: false,
       pushStateRoot: undefined,
@@ -81,6 +74,7 @@ export default {
       pushStateOnLoad: true,
       // Animate Pages
       animate: true,
+      animateWithJS: false,
       // iOS Dynamic Navbar
       iosDynamicNavbar: true,
       iosSeparateDynamicNavbar: true,
@@ -88,8 +82,7 @@ export default {
       iosAnimateNavbarBackIcon: true,
       // Delays
       iosPageLoadDelay: 0,
-      mdPageLoadDelay: 0,
-      auroraPageLoadDelay: 0,
+      materialPageLoadDelay: 0,
       // Routes hooks
       routesBeforeEnter: null,
       routesBeforeLeave: null,

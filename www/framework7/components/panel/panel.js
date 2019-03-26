@@ -118,31 +118,6 @@ export default {
         }
         return false;
       },
-      toggle(side, animate) {
-        let $panelEl;
-        let panelSide = side;
-        if (side) {
-          panelSide = side;
-          $panelEl = $(`.panel-${panelSide}`);
-        } else if ($('.panel.panel-active').length) {
-          $panelEl = $('.panel.panel-active');
-          panelSide = $panelEl.hasClass('panel-left') ? 'left' : 'right';
-        } else {
-          if ($('.panel').length > 1) {
-            return false;
-          }
-          panelSide = $('.panel').hasClass('panel-left') ? 'left' : 'right';
-          $panelEl = $(`.panel-${panelSide}`);
-        }
-        if (!panelSide) return false;
-        if (app.panel[panelSide]) {
-          return app.panel[panelSide].toggle(animate);
-        }
-        if ($panelEl.length > 0) {
-          return app.panel.create({ el: $panelEl }).toggle(animate);
-        }
-        return false;
-      },
       get(side) {
         let panelSide = side;
         if (!panelSide) {
@@ -187,11 +162,6 @@ export default {
       const app = this;
       const side = data.panel;
       app.panel.close(side, data.animate);
-    },
-    '.panel-toggle': function close(clickedEl, data = {}) {
-      const app = this;
-      const side = data.panel;
-      app.panel.toggle(side, data.animate);
     },
     '.panel-backdrop': function close() {
       const app = this;

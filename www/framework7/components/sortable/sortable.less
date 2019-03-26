@@ -1,35 +1,23 @@
 /* === Sortable === */
-@import url('./sortable-vars.less');
-
 .sortable {
   .sortable-handler {
-    width: var(--f7-sortable-handler-width);
-    height: 100%;
     position: absolute;
     top: 0;
+    bottom: 1px;
     z-index: 10;
+    background-repeat: no-repeat;
+    background-size: 18px 12px;
     opacity: 0;
     pointer-events: none;
     cursor: move;
     transition-duration: 300ms;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    &:after {
-      .core-icons-font();
-      transition-duration: 300ms;
-      transform: translateX(10px);
-      color: var(--f7-sortable-handler-color);
-      overflow: hidden;
-      height: 20px;
-      width: 18px;
-    }
     .ltr({
-      right: var(--f7-safe-area-right);
+      right: 0;
+      background-position: 100% 50%;
     });
     .rtl({
-      left: var(--f7-safe-area-left);
+      left: 0;
+      background-position: 0% 50%;
     });
   }
   .item-inner {
@@ -37,9 +25,8 @@
   }
   li.sorting {
     z-index: 50;
-    background: var(--f7-sortable-sorting-item-bg-color);
+    background: rgba(255,255,255,0.8);
     transition-duration: 0ms;
-    box-shadow: var(--f7-sortable-sorting-item-box-shadow);
     .item-inner {
       .hairline-remove(bottom);
     }
@@ -52,34 +39,25 @@
   .sortable-handler {
     pointer-events: auto;
     opacity: 1;
-    &:after {
-      transform: translateX(0px);
-    }
+    background-position: 50% 50%;
   }
   .item-link .item-inner, .item-link .item-title-row {
     background-image: none !important;
   }
 }
-.list.sortable-enabled .item-inner,
-.list.sortable-enabled .item-link .item-inner,
-.list.sortable-enabled .item-link.no-chevron .item-inner,
-.list.sortable-enabled.no-chevron .item-link .item-inner,
-.list.sortable-enabled .no-chevron .item-link .item-inner,
-.no-chevron .list.sortable-enabled .item-link .item-inner {
-  .ltr({
-    padding-right: calc(var(--f7-sortable-handler-width) + var(--f7-safe-area-right));
-  });
-  .rtl({
-    padding-left: calc(var(--f7-sortable-handler-width) + var(--f7-safe-area-right));
-  });
+// Dark Theme
+& when (@includeDarkTheme) {
+  .theme-dark {
+    .sortable, .sortable& {
+      li.sorting {
+        background-color: rgba(50, 50, 50, 0.8)
+      }
+    }
+  }
 }
-
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./sortable-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./sortable-md.less');
-});
-.if-aurora-theme({
-  @import url('./sortable-aurora.less');
-});
+}

@@ -17,7 +17,7 @@ export default {
   create() {
     const app = this;
     if (!app.passedParams.sheet || app.passedParams.sheet.backdrop === undefined) {
-      app.params.sheet.backdrop = app.theme !== 'ios';
+      app.params.sheet.backdrop = app.theme === 'md';
     }
     app.sheet = Utils.extend(
       {},

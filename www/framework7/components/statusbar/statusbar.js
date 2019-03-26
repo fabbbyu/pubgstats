@@ -83,6 +83,10 @@ const Statusbar = {
       }
     }
   },
+  iosOverlaysWebView(overlays) {
+    if (!Device.ios) return;
+    Statusbar.overlaysWebView(overlays);
+  },
   checkOverlay() {
     if (Device.needsStatusbarOverlay()) {
       $('html').addClass('with-statusbar');
@@ -190,6 +194,9 @@ export default {
         setBackgroundColor: Statusbar.setBackgroundColor,
         isVisible: Statusbar.isVisible,
         init: Statusbar.init.bind(app),
+
+        iosOverlaysWebView: Statusbar.iosOverlaysWebView,
+        setIosTextColor: Statusbar.iosSetTextColor,
       },
     });
   },

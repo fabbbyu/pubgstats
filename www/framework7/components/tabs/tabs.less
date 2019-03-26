@@ -39,12 +39,9 @@
   height: 100%;
 }
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./tabs-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./tabs-md.less');
-});
-.if-aurora-theme({
-  @import url('./tabs-aurora.less');
-});
+}

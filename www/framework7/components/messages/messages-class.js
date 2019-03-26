@@ -105,7 +105,6 @@ class Messages extends Framework7Class {
     const m = this;
     const message = Utils.extend({
       type: 'sent',
-      attrs: {},
     }, messageToRender);
     if (m.params.renderMessage) {
       return m.params.renderMessage.call(m, message);
@@ -113,9 +112,8 @@ class Messages extends Framework7Class {
     if (message.isTitle) {
       return `<div class="messages-title">${message.text}</div>`;
     }
-    const attrs = Object.keys(message.attrs).map(attr => `${attr}="${message.attrs[attr]}"`).join(' ');
     return `
-      <div class="message message-${message.type} ${message.isTyping ? 'message-typing' : ''} ${message.cssClass || ''}" ${attrs}>
+      <div class="message message-${message.type} ${message.isTyping ? 'message-typing' : ''}">
         ${message.avatar ? `
         <div class="message-avatar" style="background-image:url(${message.avatar})"></div>
         ` : ''}

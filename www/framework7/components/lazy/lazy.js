@@ -1,7 +1,6 @@
 import $ from 'dom7';
 import { window } from 'ssr-window';
 import Utils from '../../utils/utils';
-import Support from '../../utils/support';
 
 const Lazy = {
   destroy(pageEl) {
@@ -16,14 +15,14 @@ const Lazy = {
     const $pageEl = $(pageEl).closest('.page').eq(0);
 
     // Lazy images
-    const $lazyLoadImages = $pageEl.find('.lazy');
-    if ($lazyLoadImages.length === 0 && !$pageEl.hasClass('lazy')) return;
+    const lazyLoadImages = $pageEl.find('.lazy');
+    if (lazyLoadImages.length === 0 && !$pageEl.hasClass('lazy')) return;
 
     // Placeholder
     const placeholderSrc = app.params.lazy.placeholder;
 
     if (placeholderSrc !== false) {
-      $lazyLoadImages.each((index, lazyEl) => {
+      lazyLoadImages.each((index, lazyEl) => {
         if ($(lazyEl).attr('data-src') && !$(lazyEl).attr('src')) $(lazyEl).attr('src', placeholderSrc);
       });
     }
@@ -41,43 +40,6 @@ const Lazy = {
         imageIsLoading = true;
         app.lazy.loadImage(imagesSequence[0], onImageComplete);
       }
-    }
-
-    function observerCallback(entries, observer) {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (app.params.lazy.sequential && imageIsLoading) {
-            if (imagesSequence.indexOf(entry.target) < 0) imagesSequence.push(entry.target);
-            return;
-          }
-          // Load image
-          imageIsLoading = true;
-          app.lazy.loadImage(entry.target, onImageComplete);
-          // Detach
-          observer.unobserve(entry.target);
-        }
-      });
-    }
-    if (app.params.lazy.observer && Support.intersectionObserver) {
-      let observer = $pageEl[0].f7LazyObserver;
-      if (!observer) {
-        observer = new window.IntersectionObserver(observerCallback, {
-          root: $pageEl[0],
-        });
-      }
-      $lazyLoadImages.each((index, el) => {
-        if (el.f7LazyObserverAdded) return;
-        el.f7LazyObserverAdded = true;
-        observer.observe(el);
-      });
-      if (!$pageEl[0].f7LazyDestroy) {
-        $pageEl[0].f7LazyDestroy = () => {
-          observer.disconnect();
-          delete $pageEl[0].f7LazyDestroy;
-          delete $pageEl[0].f7LazyObserver;
-        };
-      }
-      return;
     }
 
     function lazyHandler() {
@@ -200,7 +162,6 @@ export default {
       placeholder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXCwsK592mkAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==',
       threshold: 0,
       sequential: true,
-      observer: true,
     },
   },
   create() {
@@ -224,7 +185,6 @@ export default {
     },
     pageAfterIn(page) {
       const app = this;
-      if (app.params.lazy.observer && Support.intersectionObserver) return;
       if (page.$el.find('.lazy').length > 0 || page.$el.hasClass('lazy')) {
         app.lazy.create(page.$el);
       }
@@ -244,7 +204,6 @@ export default {
     },
     tabBeforeRemove(tabEl) {
       const app = this;
-      if (app.params.lazy.observer && Support.intersectionObserver) return;
       const $tabEl = $(tabEl);
       if ($tabEl.find('.lazy').length > 0 || $tabEl.hasClass('lazy')) {
         app.lazy.destroy($tabEl);

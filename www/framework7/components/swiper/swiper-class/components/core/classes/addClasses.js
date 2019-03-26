@@ -9,7 +9,6 @@ export default function () {
   } = swiper;
   const suffixes = [];
 
-  suffixes.push('initialized');
   suffixes.push(params.direction);
 
   if (params.freeMode) {

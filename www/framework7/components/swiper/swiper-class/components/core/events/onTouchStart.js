@@ -65,9 +65,7 @@ export default function (event) {
     ) {
       document.activeElement.blur();
     }
-
-    const shouldPreventDefault = preventDefault && swiper.allowTouchMove && params.touchStartPreventDefault;
-    if (params.touchStartForcePreventDefault || shouldPreventDefault) {
+    if (preventDefault && swiper.allowTouchMove && params.touchStartPreventDefault) {
       e.preventDefault();
     }
   }

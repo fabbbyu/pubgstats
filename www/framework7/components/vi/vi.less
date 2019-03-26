@@ -55,12 +55,9 @@ iframe#viAd {
   }
 
 }
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./vi-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./vi-md.less');
-});
-.if-aurora-theme({
-  @import url('./vi-aurora.less');
-});
+}

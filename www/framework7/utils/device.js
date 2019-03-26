@@ -21,7 +21,6 @@ const Device = (function Device() {
     windows: false,
     cordova: !!(window.cordova || window.phonegap),
     phonegap: !!(window.cordova || window.phonegap),
-    electron: false,
   };
 
   const screenWidth = window.screen.width;
@@ -41,7 +40,6 @@ const Device = (function Device() {
   const firefox = ua.indexOf('Gecko/') >= 0 && ua.indexOf('Firefox/') >= 0;
   const macos = platform === 'MacIntel';
   const windows = platform === 'Win32';
-  const electron = ua.toLowerCase().indexOf('electron') >= 0;
 
   device.ie = ie;
   device.edge = edge;
@@ -49,8 +47,8 @@ const Device = (function Device() {
 
   // Windows
   if (windowsPhone) {
-    device.os = 'windowsPhone';
-    device.osVersion = windowsPhone[2];
+    device.os = 'windows';
+    device.osVersion = windows[2];
     device.windowsPhone = true;
   }
   // Android
@@ -87,27 +85,30 @@ const Device = (function Device() {
 
   // Webview
   device.webView = !!((iphone || ipad || ipod) && (ua.match(/.*AppleWebKit(?!.*Safari)/i) || window.navigator.standalone))
-    || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+                     || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
   device.webview = device.webView;
   device.standalone = device.webView;
 
+
   // Desktop
-  device.desktop = !(device.ios || device.android || device.windowsPhone) || electron;
+  device.desktop = !(device.os || device.android || device.webView);
   if (device.desktop) {
-    device.electron = electron;
     device.macos = macos;
     device.windows = windows;
   }
 
-  // Meta statusbar
-  const metaStatusbar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  // Minimal UI
+  if (device.os && device.os === 'ios') {
+    const osVersionArr = device.osVersion.split('.');
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    device.minimalUi = !device.webView
+      && (ipod || iphone)
+      && (osVersionArr[0] * 1 === 7 ? osVersionArr[1] * 1 >= 1 : osVersionArr[0] * 1 > 7)
+      && metaViewport && metaViewport.getAttribute('content').indexOf('minimal-ui') >= 0;
+  }
 
   // Check for status bar and fullscreen app mode
   device.needsStatusbarOverlay = function needsStatusbarOverlay() {
-    if (device.desktop) return false;
-    if (device.standalone && device.ios && metaStatusbar && metaStatusbar.content === 'black-translucent') {
-      return true;
-    }
     if ((device.webView || (device.android && device.cordova)) && (window.innerWidth * window.innerHeight === window.screen.width * window.screen.height)) {
       if (device.iphoneX && (window.orientation === 90 || window.orientation === -90)) {
         return false;

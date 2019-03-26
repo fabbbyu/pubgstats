@@ -1,55 +1,11 @@
 /* === Progressbar === */
-@import url('./progressbar-vars.less');
-
 .progressbar, .progressbar-infinite {
   width: 100%;
   overflow: hidden;
   position: relative;
   display: block;
   transform-style: preserve-3d;
-  background: var(--f7-progressbar-bg-color, rgba(var(--f7-theme-color-rgb), 0.5));
-  transform-origin: center top;
-  height: var(--f7-progressbar-height);
-  border-radius: var(--f7-progressbar-border-radius);
 }
-.progressbar {
-  vertical-align: middle;
-  span {
-    background-color: var(--f7-progressbar-progress-color, var(--f7-theme-color));
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translate3d(-100%, 0, 0);
-    transition-duration: 150ms;
-  }
-}
-.progressbar-infinite {
-  z-index: 15000;
-  &:before, &:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transform-origin: left center;
-    transform: translate3d(0, 0, 0);
-    display: block;
-    background-color: var(--f7-progressbar-progress-color, var(--f7-theme-color));
-  }
-  &.color-multi {
-    background: none !important;
-  }
-}
-.progressbar-in {
-  animation: progressbar-in 150ms forwards;
-}
-.progressbar-out {
-  animation: progressbar-out 150ms forwards;
-}
-
 body, .view, .views, .page, .panel, .popup, .framework7-root {
   > .progressbar, > .progressbar-infinite {
     position: absolute;
@@ -60,10 +16,65 @@ body, .view, .views, .page, .panel, .popup, .framework7-root {
     transform-origin: center top !important;
   }
 }
-body, .framework7-root {
-  > .progressbar, > .progressbar-infinite {
-    top: var(--f7-statusbar-height);
+.with-statusbar.device-ios,
+.with-statusbar.ios:not(.device-ios):not(.device-android) {
+  body, .framework7-root {
+    > .progressbar, > .progressbar-infinite {
+      top: 20px;
+    }
   }
+}
+.with-statusbar.device-android,
+.with-statusbar.md:not(.device-ios):not(.device-android) {
+  body, .framework7-root {
+    > .progressbar, > .progressbar-infinite {
+      top: 24px;
+    }
+  }
+}
+
+.with-statusbar {
+  .safe-areas({
+    body, .framework7-root {
+      > .progressbar, > .progressbar-infinite {
+        top: constant(safe-area-inset-top);
+        top: env(safe-area-inset-top);
+      }
+    }
+  })
+}
+.progressbar {
+  vertical-align: middle;
+  span {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate3d(-100%, 0, 0);
+    transition-duration: 150ms;
+  }
+}
+.progressbar-infinite {
+  &:before, &:after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transform: translate3d(0, 0, 0);
+    display: block;
+  }
+  &.color-multi {
+    background: none !important;
+  }
+}
+.progressbar-in {
+  animation: progressbar-in 150ms forwards;
+}
+.progressbar-out {
+  animation: progressbar-out 150ms forwards;
 }
 
 @keyframes progressbar-in {
@@ -87,12 +98,9 @@ body, .framework7-root {
   }
 }
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./progressbar-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./progressbar-md.less');
-});
-.if-aurora-theme({
-  @import url('./progressbar-aurora.less');
-});
+}

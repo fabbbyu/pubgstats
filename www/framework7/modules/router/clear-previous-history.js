@@ -1,18 +1,16 @@
 import $ from 'dom7';
-import appRouterCheck from './app-router-check';
 
-function clearPreviousPages() {
+function clearPreviousHistory() {
   const router = this;
-  appRouterCheck(router, 'clearPreviousPages');
   const app = router.app;
   const separateNavbar = router.separateNavbar;
+  const url = router.history[router.history.length - 1];
+
+  const $currentPageEl = $(router.currentPageEl);
 
   const $pagesToRemove = router.$el
-    .children('.page')
-    .filter((index, pageInView) => {
-      if (router.currentRoute && (router.currentRoute.modal || router.currentRoute.panel)) return true;
-      return pageInView !== router.currentPageEl;
-    });
+    .children('.page:not(.stacked)')
+    .filter((index, pageInView) => pageInView !== $currentPageEl[0]);
 
   $pagesToRemove.each((index, pageEl) => {
     const $oldPageEl = $(pageEl);
@@ -31,18 +29,10 @@ function clearPreviousPages() {
       }
     }
   });
-}
-
-function clearPreviousHistory() {
-  const router = this;
-  appRouterCheck(router, 'clearPreviousHistory');
-  const url = router.history[router.history.length - 1];
-
-  router.clearPreviousPages();
 
   router.history = [url];
   router.view.history = [url];
   router.saveHistory();
 }
 
-export { clearPreviousHistory, clearPreviousPages }; // eslint-disable-line
+export { clearPreviousHistory }; // eslint-disable-line

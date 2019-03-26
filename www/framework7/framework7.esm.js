@@ -1,13 +1,13 @@
 /**
- * Framework7 4.2.0
+ * Framework7 3.5.0
  * Full featured mobile HTML framework for building iOS & Android apps
  * http://framework7.io/
  *
- * Copyright 2014-2019 Vladimir Kharlampidi
+ * Copyright 2014-2018 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: March 20, 2019
+ * Released on: October 26, 2018
  */
 
 import Template7 from 'template7';
@@ -31,12 +31,9 @@ import RequestModule from './modules/request/request';
 import TouchModule from './modules/touch/touch';
 import ClicksModule from './modules/clicks/clicks';
 import RouterModule from './modules/router/router';
-import RouterTemplateLoaderModule from './modules/router/template-loader';
-import RouterComponentLoaderModule from './modules/router/component-loader';
 import HistoryModule from './modules/history/history';
 import StorageModule from './modules/storage/storage';
 import ComponentModule from './modules/component/component';
-import ServiceWorkerModule from './modules/service-worker/service-worker';
 
 // Core Components
 import Statusbar from './components/statusbar/statusbar';
@@ -46,7 +43,6 @@ import Toolbar from './components/toolbar/toolbar';
 import Subnavbar from './components/subnavbar/subnavbar';
 import TouchRipple from './components/touch-ripple/touch-ripple';
 import Modal from './components/modal/modal';
-import Router from './modules/router/router-class';
 
 
 if ("es" !== 'es') {
@@ -60,11 +56,6 @@ if ("es" !== 'es') {
 }
 
 // Install Core Modules & Components
-Router.use([
-  RouterTemplateLoaderModule,
-  RouterComponentLoaderModule,
-]);
-
 Framework7.use([
   DeviceModule,
   SupportModule,
@@ -77,7 +68,6 @@ Framework7.use([
   HistoryModule,
   StorageModule,
   ComponentModule,
-  ServiceWorkerModule,
   Statusbar,
   View,
   Navbar,

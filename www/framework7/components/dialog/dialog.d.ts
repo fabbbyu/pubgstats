@@ -19,15 +19,15 @@ export namespace Dialog {
     opened : boolean
 
     /** Open dialog */
-    open(animate?: boolean) : void
+    open(animate : boolean) : void
     /** Close dialog. */
-    close(animate?: boolean) : void
+    close(animate : boolean) : void
     /** Sets dialog progress when Dialog Progress shortcut in use */
     setProgress(
       /** progressbar progress (from 0 to 100) */
-      progress: number,
+      progress : number,
       /** (in ms) - progressbar progress change duration */
-      duration?: number) : void
+      duration : number) : void
     /** Sets dialog's title */
     setTitle(title : string) : void
     /** Sets dialog's text */
@@ -42,15 +42,15 @@ export namespace Dialog {
     /** Enables bold button text. (default false) */
     bold?: boolean
     /** Button color, one of default colors. */
-    color?: string
+    color: string
     /** If enabled then button click will close Dialog. (default true) */
     close?: boolean
     /** Additional button CSS class. */
-    cssClass?: string
+    cssClass: string
     /** Array with keyboard keycodes that will be used to trigger button click. For example, key code 13 means that button click will be triggered on Enter key press. (default []) */
     keyCodes?: number[]
     /** Callback function that will be executed after click on this button. */
-    onClick?: (dialog : Dialog, e : Event) => void
+    onClick: (dialog : Dialog, e : Event) => void
   }
 
   interface Parameters {
@@ -115,11 +115,11 @@ export namespace Dialog {
       /** destroy Dialog instance */
       destroy(el : HTMLElement | CSSSelector | Dialog) : void;
       /** get Dialog instance by HTML element */
-      get(el? : HTMLElement | CSSSelector) : Dialog;
+      get(el : HTMLElement | CSSSelector) : Dialog;
       /** opens Dialog */
-      open(el? : HTMLElement | CSSSelector, animate? : boolean) : Dialog;
+      open(el : HTMLElement | CSSSelector, animate : boolean) : Dialog;
       /** closes Dialog */
-      close(el? : HTMLElement | CSSSelector, animate? : boolean) : Dialog;
+      close(el : HTMLElement | CSSSelector, animate : boolean) : Dialog;
 
       /** create Alert Dialog and open it */
       alert(text : string, title : string, callback?: () => void) : Dialog
@@ -178,8 +178,6 @@ export namespace Dialog {
       destroyPredefinedDialogs?: boolean
       /** Enables keyboard shortcuts (Enter and Esc) keys for predefined dialogs (Alert, Confirm, Prompt, Login, Password) "Ok" and "Cancel" buttons. (default true) */
       keyboardActions?: boolean
-      /** When enabled, dialog will be closed on backdrop click. (default true) */
-      closeByBackdropClick?: boolean
     } | undefined
   }
   interface AppEvents {

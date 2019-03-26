@@ -34,6 +34,11 @@ export default {
     },
     orientationchange() {
       const app = this;
+      if (app.device && app.device.minimalUi) {
+        if (window.orientation === 90 || window.orientation === -90) {
+          document.body.scrollTop = 0;
+        }
+      }
       // Fix iPad weird body scroll
       if (app.device.ipad) {
         document.body.scrollLeft = 0;

@@ -108,17 +108,17 @@ export default {
     },
     init() {
       const swiper = this;
-      if (!swiper.params.parallax.enabled) return;
+      if (!swiper.params.parallax) return;
       swiper.parallax.setTranslate();
     },
     setTranslate() {
       const swiper = this;
-      if (!swiper.params.parallax.enabled) return;
+      if (!swiper.params.parallax) return;
       swiper.parallax.setTranslate();
     },
     setTransition(duration) {
       const swiper = this;
-      if (!swiper.params.parallax.enabled) return;
+      if (!swiper.params.parallax) return;
       swiper.parallax.setTransition(duration);
     },
   },

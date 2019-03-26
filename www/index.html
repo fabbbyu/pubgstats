@@ -1,53 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html class="ios device-pixel-ratio-1 device-desktop device-windows support-position-sticky">
     <head>
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
-        <meta charset="utf-8">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" href="framework7/css/framework7.ios.min.css">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>PUBG Stats</title>
+      <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+      <meta charset="utf-8">
+      <meta name="format-detection" content="telephone=no">
+      <meta name="msapplication-tap-highlight" content="no">
+      <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <link rel="stylesheet" href="framework7/css/framework7.ios.min.css">
+      <link rel="stylesheet" href="framework7/framework7-icons-master/css/framework7-icons.css">
+      <link rel="stylesheet" type="text/css" href="css/index.css">
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <title>PUBG Stats</title>
     </head>
     <body class="color-theme-orange">
 
-        <div id="app">
+      <div id="app">
 
-          <!-- <div class="panel panel-left panel-reveal">
-
+          <div class="panel panel-left panel-reveal">
+            <div class="content-block">             
+              <p><a href="#" class="panel-close"><i class="icon f7-icons ios-only" style="font-size:2rem;margin-left:0.9rem;">close</i></a></p>
+            </div>
             <div class="block-title searchbar-found">Menu</div>
 
-            <div class="list" id="lateralMenu" style="display:none;">
+            <div class="list" id="adminMenu">
               <ul> 
-                <li onclick="openRoteiros();">
+                <li onclick="reportIssue();">
                   <a href="#" class="item-link item-content">
-                    <div class="item-media"><i class="fas fa-location-arrow marvelRedColor"></i></div>
+                    <div class="item-media"><i class="icon f7-icons">alert</i></div>
                     <div class="item-inner">
-                      <div class="item-title" style="text-transform:none;">Viagens</div>
+                      <div class="item-title" style="text-transform:none;">Report a issue</div>
                     </div>
                   </a>
                 </li>
-                <li onclick="openSettings();">
+                <li onclick="makeSuggestion();">
                   <a href="#" class="item-link item-content">
-                    <div class="item-media"><i class="fas fa-cog marvelRedColor"></i></div>
+                    <div class="item-media"><i class="icon f7-icons">chat_bubble</i></div>
                     <div class="item-inner">
-                      <div class="item-title" style="text-transform:none;">Configurações</div>
+                      <div class="item-title" style="text-transform:none;">Make a suggestion</div>
                     </div>
                   </a>
                 </li>
-                <li onclick="logout();">
+                <li onclick="collaborate();">
                   <a href="#" class="item-link item-content">
-                    <div class="item-media"><i class="fas fa-sign-out-alt marvelRedColor"></i></div>
+                    <div class="item-media"><i class="icon f7-icons">logo_github</i></div>
                     <div class="item-inner">
-                      <div class="item-title" style="text-transform:none;">Sair</div>
+                      <div class="item-title" style="text-transform:none;">Collaborate</div>
                     </div>
                   </a>
                 </li>
               </ul>
             </div>
 
-          </div> -->
+          </div>
 
           <!-- Statusbar overlay -->
           <div class="statusbar"></div>
@@ -55,14 +61,67 @@
           <!-- Your main view, should have "view-main" class -->
           <div class="view view-main">
             <!-- Initial Page, "data-name" contains page name -->
+            <div data-name="login" class="page no-navbar no-toolbar no-swipeback">
+
+              <!-- Scrollable page content -->
+              <div class="page-content login-screen-content">
+                <div class="indexPage">
+
+                  <div class="row">
+                    <div class="col-100"><h3>PUBG Stats</h3></div>
+                  </div>  
+
+                  <div class="row" style="margin-top:-1rem;">
+                    <div class="col-100"><p>A open source App with PUBG Stats</p></div>
+                  </div>  
+
+                  <div class="row">
+                    <div class="col-100"><img src="img/pubg-logo.png" /></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-100">
+                      <div class="list no-hairlines-md">
+                        <ul>
+                          <li class="item-content item-input">
+                            <div class="item-media">
+                              <i class="icon demo-list-icon"></i>
+                            </div>
+                            <div class="item-inner">
+                              <div class="item-title item-label">Select the server</div>
+                              <div class="item-input-wrap input-dropdown-wrap">
+                                <select placeholder="Please choose..." id="serverIndex">
+                                  <option value="na">NA</option>  
+                                  <option value="eu">EU</option>  
+                                  <option value="as">AS</option>  
+                                  <option value="sa">SA</option>  
+                                  <option value="oc">OC</option> 
+                                </select>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>    
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-bottom: 2rem;">
+                    <div class="col-100">
+                      <a class="button button-large button-fill" onclick="loadHome();">GO!</a>
+                    </div>
+                  </div>    
+              
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-        <!-- Path to Framework7 Library JS-->
-        <script type="text/javascript" src="framework7/js/framework7.min.js"></script>
-        <!-- Path to your app js-->
-        <script type="text/javascript" src="cordova.js"></script>
-        <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmMBfpi-GcWG7F6JMBpqTKH_ULQAXtj3M"></script> -->
-        <script type="text/javascript" src="js/scripts.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
+      </div>
+      <!-- Path to Framework7 Library JS-->
+      <script type="text/javascript" src="framework7/js/framework7.min.js"></script>
+      <!-- <script type="text/javascript" src="cordova.js"></script> -->
+      <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmMBfpi-GcWG7F6JMBpqTKH_ULQAXtj3M"></script> -->
+      <script type="text/javascript" src="js/scripts.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>

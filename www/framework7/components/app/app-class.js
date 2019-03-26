@@ -4,7 +4,6 @@ import { window, document } from 'ssr-window';
 import Utils from '../../utils/utils';
 import Device from '../../utils/device';
 import Framework7Class from '../../utils/class';
-import EventsClass from '../../utils/events-class';
 import ConstructorMethods from '../../utils/constructor-methods';
 import ModalMethods from '../../utils/modal-methods';
 import loadModule from './load-module';
@@ -12,9 +11,6 @@ import loadModule from './load-module';
 class Framework7 extends Framework7Class {
   constructor(params) {
     super(params);
-    if (Framework7.instance) {
-      throw new Error('Framework7 is already initialized and can\'t be initialized more than once');
-    }
 
     const passedParams = Utils.extend({}, params);
 
@@ -63,9 +59,7 @@ class Framework7 extends Framework7Class {
       // Theme
       theme: (function getTheme() {
         if (app.params.theme === 'auto') {
-          if (Device.ios) return 'ios';
-          if (Device.desktop && Device.electron) return 'aurora';
-          return 'md';
+          return Device.ios ? 'ios' : 'md';
         }
         return app.params.theme;
       }()),
@@ -81,9 +75,6 @@ class Framework7 extends Framework7Class {
     // Install Modules
     app.useModules();
 
-    // Init Data & Methods
-    app.initData();
-
     // Init
     if (app.params.init) {
       if (Device.cordova && app.params.initOnDeviceReady) {
@@ -96,29 +87,6 @@ class Framework7 extends Framework7Class {
     }
     // Return app instance
     return app;
-  }
-
-  initData() {
-    const app = this;
-
-    // Data
-    app.data = {};
-    if (app.params.data && typeof app.params.data === 'function') {
-      Utils.extend(app.data, app.params.data.bind(app)());
-    } else if (app.params.data) {
-      Utils.extend(app.data, app.params.data);
-    }
-    // Methods
-    app.methods = {};
-    if (app.params.methods) {
-      Object.keys(app.params.methods).forEach((methodName) => {
-        if (typeof app.params.methods[methodName] === 'function') {
-          app.methods[methodName] = app.params.methods[methodName].bind(app);
-        } else {
-          app.methods[methodName] = app.params.methods[methodName];
-        }
-      });
-    }
   }
 
   init() {
@@ -138,6 +106,24 @@ class Framework7 extends Framework7Class {
     // Theme class
     $('html').removeClass('ios md').addClass(app.theme);
 
+    // Data
+    app.data = {};
+    if (app.params.data && typeof app.params.data === 'function') {
+      Utils.extend(app.data, app.params.data.bind(app)());
+    } else if (app.params.data) {
+      Utils.extend(app.data, app.params.data);
+    }
+    // Methods
+    app.methods = {};
+    if (app.params.methods) {
+      Object.keys(app.params.methods).forEach((methodName) => {
+        if (typeof app.params.methods[methodName] === 'function') {
+          app.methods[methodName] = app.params.methods[methodName].bind(app);
+        } else {
+          app.methods[methodName] = app.params.methods[methodName];
+        }
+      });
+    }
     // Init class
     Utils.nextFrame(() => {
       app.root.removeClass('framework7-initializing');
@@ -188,10 +174,6 @@ class Framework7 extends Framework7Class {
 
   static get Class() {
     return Framework7Class;
-  }
-
-  static get Events() {
-    return EventsClass;
   }
 }
 

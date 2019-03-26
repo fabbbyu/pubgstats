@@ -110,8 +110,16 @@ class Modal extends Framework7Class {
     // Show Modal
     $el.show();
 
+    // Set Dialog offset
+    if (type === 'dialog') {
+      $el.css({
+        marginTop: `${-Math.round($el.outerHeight() / 2)}px`,
+      });
+    }
+
+
     /* eslint no-underscore-dangle: ["error", { "allow": ["_clientLeft"] }] */
-    modal._clientLeft = $el[0].clientLeft;
+    // modal._clientLeft = $el[0].clientLeft;
 
     // Modal
     function transitionEnd() {
@@ -122,22 +130,24 @@ class Modal extends Framework7Class {
       }
     }
     if (animate) {
-      if ($backdropEl) {
-        $backdropEl.removeClass('not-animated');
-        $backdropEl.addClass('backdrop-in');
-      }
-      $el
-        .animationEnd(() => {
-          transitionEnd();
-        });
-      $el
-        .transitionEnd(() => {
-          transitionEnd();
-        });
-      $el
-        .removeClass('modal-out not-animated')
-        .addClass('modal-in');
-      modal.onOpen();
+      Utils.nextFrame(() => {
+        if ($backdropEl) {
+          $backdropEl.removeClass('not-animated');
+          $backdropEl.addClass('backdrop-in');
+        }
+        $el
+          .animationEnd(() => {
+            transitionEnd();
+          });
+        $el
+          .transitionEnd(() => {
+            transitionEnd();
+          });
+        $el
+          .removeClass('modal-out not-animated')
+          .addClass('modal-in');
+        modal.onOpen();
+      });
     } else {
       if ($backdropEl) {
         $backdropEl.addClass('backdrop-in not-animated');

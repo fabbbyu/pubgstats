@@ -8,24 +8,10 @@ i.icon {
   font-style: normal;
   position: relative;
 }
-.icon-back,
-.icon-prev,
-.icon-forward,
-.icon-next {
-  &:after {
-    .core-icons-font();
-  }
-}
-.icon[class*="color-"] {
-  color: var(--f7-theme-color);
-}
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./icon-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./icon-md.less');
-});
-.if-aurora-theme({
-  @import url('./icon-aurora.less');
-});
+}

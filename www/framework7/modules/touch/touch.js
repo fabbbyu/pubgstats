@@ -6,7 +6,7 @@ import Device from '../../utils/device';
 function initTouch() {
   const app = this;
   const params = app.params.touch;
-  const useRipple = params[`${app.theme}TouchRipple`];
+  const useRipple = app.theme === 'md' && params.materialRipple;
 
   if (Device.ios && Device.webView) {
     // Strange hack required for iOS 8 webview to work on inputs
@@ -24,7 +24,6 @@ function initTouch() {
   let isMoved;
   let tapHoldFired;
   let tapHoldTimeout;
-  let preventClick;
 
   let activableElement;
   let activeTimeout;
@@ -46,30 +45,11 @@ function initTouch() {
     if (parents.length > 0) {
       activable = activable ? activable.add(parents) : parents;
     }
-    if (activable && activable.length > 1) {
-      const newActivable = [];
-      let preventPropagation;
-      for (let i = 0; i < activable.length; i += 1) {
-        if (!preventPropagation) {
-          newActivable.push(activable[i]);
-          if (activable.eq(i).hasClass('prevent-active-state-propagation')
-            || activable.eq(i).hasClass('no-active-state-propagation')
-          ) {
-            preventPropagation = true;
-          }
-        }
-      }
-      activable = $(newActivable);
-    }
     return activable || target;
   }
 
-  function isInsideScrollableViewLight(el) {
-    const pageContent = el.parents('.page-content');
-    return pageContent.length > 0;
-  }
   function isInsideScrollableView(el) {
-    const pageContent = el.parents('.page-content');
+    const pageContent = el.parents('.page-content, .panel');
 
     if (pageContent.length === 0) {
       return false;
@@ -162,7 +142,7 @@ function initTouch() {
 
   // Ripple handlers
   function findRippleElement(el) {
-    const rippleElements = params.touchRippleElements;
+    const rippleElements = params.materialRippleElements;
     const $el = $(el);
     if ($el.is(rippleElements)) {
       if ($el.hasClass('no-ripple')) {
@@ -196,11 +176,7 @@ function initTouch() {
       rippleTarget = undefined;
       return;
     }
-    const inScrollable = params.fastClicks
-      ? isInsideScrollableView(rippleTarget)
-      : isInsideScrollableViewLight(rippleTarget);
-
-    if (!inScrollable) {
+    if (!isInsideScrollableView(rippleTarget)) {
       createRipple(rippleTarget, touchStartX, touchStartY);
     } else {
       rippleTimeout = setTimeout(() => {
@@ -267,9 +243,7 @@ function initTouch() {
       // Upon tapping, we give the scrolling time to stop, then we grab the element based where the user tapped.
       setTimeout(() => {
         targetElement = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-        if (targetElement) {
-          targetElement.dispatchEvent(evt);
-        }
+        targetElement.dispatchEvent(evt);
       }, 10);
     } else {
       targetElement.dispatchEvent(evt);
@@ -345,7 +319,14 @@ function initTouch() {
 
     if (params.activeState) {
       activableElement = findActivableElement(targetElement);
-      activeTimeout = setTimeout(addActive, 0);
+      // If it's inside a scrollable view, we don't trigger active-state yet,
+      // because it can be a scroll instead. Based on the link:
+      // http://labnote.beedesk.com/click-scroll-and-pseudo-active-on-mobile-webk
+      if (!isInsideScrollableView(activableElement)) {
+        addActive();
+      } else {
+        activeTimeout = setTimeout(addActive, 80);
+      }
     }
     if (useRipple) {
       rippleTouchStart(targetElement, touchStartX, touchStartY);
@@ -392,10 +373,6 @@ function initTouch() {
           e.preventDefault();
         }
       }
-      if (params.activeState) removeActive();
-      if (useRipple) {
-        rippleTouchEnd();
-      }
       return true;
     }
 
@@ -413,9 +390,6 @@ function initTouch() {
 
     if ((touchEndTime - lastClickTime) < params.fastClicksDelayBetweenClicks) {
       setTimeout(removeActive, 0);
-      if (useRipple) {
-        rippleTouchEnd();
-      }
       return true;
     }
 
@@ -536,129 +510,6 @@ function initTouch() {
     return allowClick;
   }
 
-  function handleTouchStartLight(e) {
-    isMoved = false;
-    tapHoldFired = false;
-    preventClick = false;
-    if (e.targetTouches.length > 1) {
-      if (activableElement) removeActive();
-      return true;
-    }
-    if (e.touches.length > 1 && activableElement) {
-      removeActive();
-    }
-    if (params.tapHold) {
-      if (tapHoldTimeout) clearTimeout(tapHoldTimeout);
-      tapHoldTimeout = setTimeout(() => {
-        if (e && e.touches && e.touches.length > 1) return;
-        tapHoldFired = true;
-        e.preventDefault();
-        preventClick = true;
-        $(e.target).trigger('taphold');
-      }, params.tapHoldDelay);
-    }
-    targetElement = e.target;
-    touchStartX = e.targetTouches[0].pageX;
-    touchStartY = e.targetTouches[0].pageY;
-
-    if (params.activeState) {
-      activableElement = findActivableElement(targetElement);
-      if (!isInsideScrollableViewLight(activableElement)) {
-        addActive();
-      } else {
-        activeTimeout = setTimeout(addActive, 80);
-      }
-    }
-    if (useRipple) {
-      rippleTouchStart(targetElement, touchStartX, touchStartY);
-    }
-    return true;
-  }
-  function handleTouchMoveLight(e) {
-    let distance = 0;
-    let touch;
-    if (e.type === 'touchmove') {
-      touch = e.targetTouches[0];
-      if (touch && touch.touchType === 'stylus') {
-        distance = 5;
-      }
-    }
-
-    if (distance && touch) {
-      const pageX = touch.pageX;
-      const pageY = touch.pageY;
-      if (Math.abs(pageX - touchStartX) > distance || Math.abs(pageY - touchStartY) > distance) {
-        isMoved = true;
-      }
-    } else {
-      isMoved = true;
-    }
-    if (isMoved) {
-      preventClick = true;
-      if (params.tapHold) {
-        clearTimeout(tapHoldTimeout);
-      }
-      if (params.activeState) {
-        clearTimeout(activeTimeout);
-        removeActive();
-      }
-      if (useRipple) {
-        rippleTouchMove();
-      }
-    }
-  }
-  function handleTouchEndLight(e) {
-    clearTimeout(activeTimeout);
-    clearTimeout(tapHoldTimeout);
-    if (document.activeElement === e.target) {
-      if (params.activeState) removeActive();
-      if (useRipple) {
-        rippleTouchEnd();
-      }
-      return true;
-    }
-    if (params.activeState) {
-      addActive();
-      setTimeout(removeActive, 0);
-    }
-    if (useRipple) {
-      rippleTouchEnd();
-    }
-    if ((params.tapHoldPreventClicks && tapHoldFired) || preventClick) {
-      if (e.cancelable) e.preventDefault();
-      preventClick = true;
-      return false;
-    }
-    return true;
-  }
-  function handleClickLight(e) {
-    let localPreventClick = preventClick;
-    if (targetElement && e.target !== targetElement) {
-      localPreventClick = true;
-    }
-    if (params.tapHold && params.tapHoldPreventClicks && tapHoldFired) {
-      localPreventClick = true;
-    }
-    if (localPreventClick) {
-      e.stopImmediatePropagation();
-      e.stopPropagation();
-      e.preventDefault();
-    }
-
-    if (params.tapHold) {
-      tapHoldTimeout = setTimeout(
-        () => {
-          tapHoldFired = false;
-        },
-        (Device.ios || Device.androidChrome ? 100 : 400)
-      );
-    }
-    preventClick = false;
-    targetElement = null;
-
-    return !localPreventClick;
-  }
-
   function emitAppTouchEvent(name, e) {
     app.emit({
       events: name,
@@ -716,18 +567,10 @@ function initTouch() {
   }
 
   if (Support.touch) {
-    if (params.fastClicks) {
-      app.on('click', handleClick);
-      app.on('touchstart', handleTouchStart);
-      app.on('touchmove', handleTouchMove);
-      app.on('touchend', handleTouchEnd);
-    } else {
-      app.on('click', handleClickLight);
-      app.on('touchstart', handleTouchStartLight);
-      app.on('touchmove', handleTouchMoveLight);
-      app.on('touchend', handleTouchEndLight);
-    }
-
+    app.on('click', handleClick);
+    app.on('touchstart', handleTouchStart);
+    app.on('touchmove', handleTouchMove);
+    app.on('touchend', handleTouchEnd);
     document.addEventListener('touchcancel', handleTouchCancel, { passive: true });
   } else if (params.activeState) {
     app.on('touchstart', handleMouseDown);
@@ -750,23 +593,21 @@ export default {
   params: {
     touch: {
       // Fast clicks
-      fastClicks: false,
+      fastClicks: true,
       fastClicksDistanceThreshold: 10,
       fastClicksDelayBetweenClicks: 50,
       fastClicksExclude: '', // CSS selector
       // ContextMenu
-      disableContextMenu: false,
+      disableContextMenu: true,
       // Tap Hold
       tapHold: false,
       tapHoldDelay: 750,
       tapHoldPreventClicks: true,
       // Active State
       activeState: true,
-      activeStateElements: 'a, button, label, span, .actions-button, .stepper-button, .stepper-button-plus, .stepper-button-minus, .card-expandable, .menu-item',
-      mdTouchRipple: true,
-      iosTouchRipple: false,
-      auroraTouchRipple: false,
-      touchRippleElements: '.ripple, .link, .item-link, .list-button, .links-list a, .button, button, .input-clear-button, .dialog-button, .tab-link, .item-radio, .item-checkbox, .actions-button, .searchbar-disable-button, .fab a, .checkbox, .radio, .data-table .sortable-cell:not(.input-cell), .notification-close-button, .stepper-button, .stepper-button-minus, .stepper-button-plus, .menu-item-content',
+      activeStateElements: 'a, button, label, span, .actions-button, .stepper-button, .stepper-button-plus, .stepper-button-minus',
+      materialRipple: true,
+      materialRippleElements: '.ripple, .link, .item-link, .links-list a, .button, button, .input-clear-button, .dialog-button, .tab-link, .item-radio, .item-checkbox, .actions-button, .searchbar-disable-button, .fab a, .checkbox, .radio, .data-table .sortable-cell:not(.input-cell), .notification-close-button, .stepper-button, .stepper-button-minus, .stepper-button-plus',
     },
   },
   instance: {

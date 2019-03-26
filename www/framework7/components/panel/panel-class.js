@@ -34,7 +34,6 @@ class Panel extends Framework7Class {
     }
 
     let $backdropEl = $('.panel-backdrop');
-
     if ($backdropEl.length === 0) {
       $backdropEl = $('<div class="panel-backdrop"></div>');
       $backdropEl.insertBefore($el);
@@ -109,10 +108,6 @@ class Panel extends Framework7Class {
         app.allowPanelOpen = true;
         app.emit('local::breakpoint panelBreakpoint');
         panel.$el.trigger('panel:breakpoint', panel);
-      } else {
-        $viewEl.css({
-          [`margin-${side}`]: `${$el.width()}px`,
-        });
       }
     } else if (wasVisible) {
       $el.css('display', '').removeClass('panel-visible-by-breakpoint panel-active');
@@ -160,17 +155,6 @@ class Panel extends Framework7Class {
     if (panel.resizeHandler) {
       app.off('resize', panel.resizeHandler);
     }
-
-    if (panel.$el.hasClass('panel-visible-by-breakpoint')) {
-      const $viewEl = $(panel.getViewEl());
-      panel.$el.css('display', '').removeClass('panel-visible-by-breakpoint panel-active');
-      $viewEl.css({
-        [`margin-${panel.side}`]: '',
-      });
-      app.emit('local::breakpoint panelBreakpoint');
-      panel.$el.trigger('panel:breakpoint', panel);
-    }
-
     panel.$el.trigger('panel:destroy', panel);
     panel.emit('local::destroy panelDestroy');
     delete app.panel[panel.side];
@@ -192,7 +176,7 @@ class Panel extends Framework7Class {
     const $panelParentEl = $el.parent();
     const wasInDom = $el.parents(document).length > 0;
 
-    if (!$panelParentEl.is(app.root) || $el.prevAll('.views, .view').length) {
+    if (!$panelParentEl.is(app.root)) {
       const $insertBeforeEl = app.root.children('.panel, .views, .view').eq(0);
       const $insertAfterEl = app.root.children('.statusbar').eq(0);
 
@@ -202,22 +186,6 @@ class Panel extends Framework7Class {
         $el.insertAfter($insertBeforeEl);
       } else {
         app.root.prepend($el);
-      }
-
-      if ($backdropEl
-        && $backdropEl.length
-        && (
-          (
-            !$backdropEl.parent().is(app.root)
-            && $backdropEl.nextAll('.panel').length === 0
-          )
-          || (
-            $backdropEl.parent().is(app.root)
-            && $backdropEl.nextAll('.panel').length === 0
-          )
-        )
-      ) {
-        $backdropEl.insertBefore($el);
       }
 
       panel.once('panelClosed', () => {
@@ -246,33 +214,35 @@ class Panel extends Framework7Class {
     $backdropEl.show();
 
     /* eslint no-underscore-dangle: ["error", { "allow": ["_clientLeft"] }] */
-    panel._clientLeft = $el[0].clientLeft;
+    // panel._clientLeft = $el[0].clientLeft;
 
-    $('html').addClass(`with-panel with-panel-${side}-${effect}`);
-    panel.onOpen();
+    Utils.nextFrame(() => {
+      $('html').addClass(`with-panel with-panel-${side}-${effect}`);
+      panel.onOpen();
 
-    // Transition End;
-    const transitionEndTarget = effect === 'reveal' ? $el.nextAll('.view, .views').eq(0) : $el;
+      // Transition End;
+      const transitionEndTarget = effect === 'reveal' ? $el.nextAll('.view, .views').eq(0) : $el;
 
-    function panelTransitionEnd() {
-      transitionEndTarget.transitionEnd((e) => {
-        if ($(e.target).is(transitionEndTarget)) {
-          if ($el.hasClass('panel-active')) {
-            panel.onOpened();
-            $backdropEl.css({ display: '' });
-          } else {
-            panel.onClosed();
-            $backdropEl.css({ display: '' });
-          }
-        } else panelTransitionEnd();
-      });
-    }
-    if (animate) {
-      panelTransitionEnd();
-    } else {
-      panel.onOpened();
-      $backdropEl.css({ display: '' });
-    }
+      function panelTransitionEnd() {
+        transitionEndTarget.transitionEnd((e) => {
+          if ($(e.target).is(transitionEndTarget)) {
+            if ($el.hasClass('panel-active')) {
+              panel.onOpened();
+              $backdropEl.css({ display: '' });
+            } else {
+              panel.onClosed();
+              $backdropEl.css({ display: '' });
+            }
+          } else panelTransitionEnd();
+        });
+      }
+      if (animate) {
+        panelTransitionEnd();
+      } else {
+        panel.onOpened();
+        $backdropEl.css({ display: '' });
+      }
+    });
 
     return true;
   }
@@ -312,12 +282,6 @@ class Panel extends Framework7Class {
       panel.onClosed();
     }
     return true;
-  }
-
-  toggle(animate = true) {
-    const panel = this;
-    if (panel.opened) panel.close(animate);
-    else panel.open(animate);
   }
 
   onOpen() {

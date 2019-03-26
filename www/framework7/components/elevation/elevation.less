@@ -1,24 +1,32 @@
 /* === Elevation === */
-@import url('elevation-vars.less');
-
 @elevations: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24;
-
-each(@elevations, {
+.elevation-loop(@array, @i: 1) when (@i =< length(@array)) {
+  @value: extract(@array, @i);
   .elevation-@{value} {
-    box-shadow: ~"var(--f7-elevation-@{value}) !important";
+    .elevation(@value) !important;
   }
-});
-each(@elevations, {
+  .elevation-loop(@array, (@i + 1));
+}
+.elevation-loop(@elevations);
+
+.elevation-hover-loop(@array, @i: 1) when (@i =< length(@array)) {
+  @value: extract(@array, @i);
   .device-desktop .elevation-hover-@{value}:hover {
-    box-shadow: ~"var(--f7-elevation-@{value}) !important";
+    .elevation(@value) !important;
   }
-});
-each(@elevations, {
+  .elevation-hover-loop(@array, (@i + 1));
+}
+.elevation-hover-loop(@elevations);
+
+.elevation-pressed-loop(@array, @i: 1) when (@i =< length(@array)) {
+  @value: extract(@array, @i);
   .active-state.elevation-pressed-@{value},
   .device-desktop .active-state.elevation-pressed-@{value} {
-    box-shadow: ~"var(--f7-elevation-@{value}) !important";
+    .elevation(@value) !important;
   }
-});
+  .elevation-pressed-loop(@array, (@i + 1));
+}
+.elevation-pressed-loop(@elevations);
 
 .elevation-transition-100 {
   transition-duration: 100ms;
@@ -42,12 +50,9 @@ each(@elevations, {
   transition-property: box-shadow;
 }
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./elevation-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./elevation-md.less');
-});
-.if-aurora-theme({
-  @import url('./elevation-aurora.less');
-});
+}

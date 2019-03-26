@@ -1,19 +1,16 @@
 /* === Login Screen === */
-@import url('./login-screen-vars.less');
-
 .login-screen {
   position: absolute;
   left: 0;
-  top: var(--f7-statusbar-height);
+  top: 0;
   width: 100%;
-  height: calc(100% - var(--f7-statusbar-height));
+  height: 100%;
   display: none;
   box-sizing: border-box;
   transition-property: transform;
   transform: translate3d(0, 100%, 0);
-  background: var(--f7-login-screen-bg-color);
+  background: #fff;
   z-index: 11000;
-  will-change: transform;
   &.modal-in, &.modal-out {
     transition-duration: 400ms;
   }
@@ -28,24 +25,29 @@
     transform: translate3d(0, 100%, 0);
   }
 }
+html.with-statusbar {
+  &.device-ios .login-screen, &.ios:not(.device-ios):not(.device-android) .login-screen {
+    height: ~"calc(100% - 20px)";
+    top: 20px;
+  }
+  .safe-areas({
+    .login-screen {
+      height: ~"calc(100% - constant(safe-area-inset-top))";
+      height: ~"calc(100% - env(safe-area-inset-top))";
+      top: constant(safe-area-inset-top);
+      top: env(safe-area-inset-top);
+    }
+  });
+  &.device-android .login-screen, &.md:not(.device-ios):not(.device-android) .login-screen {
+    height: ~"calc(100% - 24px)";
+    top: 24px;
+  }
+}
 
 .login-screen-content {
-  background: var(--f7-login-screen-content-bg-color);
-  .list-button {
-    text-align: center;
-    color: var(--f7-login-screen-list-button-text-color, var(--f7-theme-color));
-  }
-  .login-screen-title,
-  .list,
-  .block {
-    margin: var(--f7-login-screen-blocks-margin-vertical) auto;
-  }
-  .login-screen-title,
-  .list,
-  .block,
-  .block-footer,
-  .block-header {
-    max-width: var(--f7-login-screen-blocks-max-width);
+  background: #fff;
+  .login-screen-title, .list, .block, .block-footer, .block-header {
+    max-width: 480px;
   }
   .list ul {
     .hairline-remove(top);
@@ -59,25 +61,12 @@
   }
 }
 .login-screen-title {
-  text-align: var(--f7-login-screen-title-text-align);
-  font-size: var(--f7-login-screen-title-font-size);
-  font-weight: var(--f7-login-screen-title-font-weight);
-  color: var(--f7-login-screen-title-text-color);
-  letter-spacing: var(--f7-login-screen-title-letter-spacing);
-}
-.theme-dark {
-  .login-screen-content .list ul,
-  .login-screen-content .block-strong {
-    background-color: transparent;
-  }
+  text-align: center;
 }
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./login-screen-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./login-screen-md.less');
-});
-.if-aurora-theme({
-  @import url('./login-screen-aurora.less');
-});
+}

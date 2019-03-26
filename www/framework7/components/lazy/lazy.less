@@ -12,12 +12,9 @@
   }
 }
 
-.if-ios-theme({
+& when (@includeIosTheme) {
   @import url('./lazy-ios.less');
-});
-.if-md-theme({
+}
+& when (@includeMdTheme) {
   @import url('./lazy-md.less');
-});
-.if-aurora-theme({
-  @import url('./lazy-aurora.less');
-});
+}
