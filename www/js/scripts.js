@@ -27,6 +27,7 @@ var pubgApp = new Framework7({
           //alert(page.name);
 
           console.log("server: "+localStorage.getItem("server"));
+          console.log("map: "+localStorage.getItem("map"));
 
         },  
 
@@ -101,6 +102,9 @@ function loadHome(){
   var server = $$("#serverIndex").val();
   localStorage.setItem("server", server);
 
+  var map = $$("#mapIndex").val();
+  localStorage.setItem("map", map);
+
   mainView.router.navigate({
     name: 'home',
     reloadCurrent: true,
@@ -111,6 +115,9 @@ function loadHome(){
 function refreshData(){
   var server = $$("#serverHome").val();
   localStorage.setItem("server", server);
+
+  var map = $$("#mapHome").val();
+  localStorage.setItem("map", map);
 
   mainView.router.navigate(mainView.router.currentRoute.url, {
     reloadCurrent: true,
