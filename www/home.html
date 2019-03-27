@@ -9,48 +9,52 @@
             <i class="icon f7-icons ios-only">bars</i>
           </a>
         </div>
-        <div class="title sliding" style="text-transform:none;">PUBG Stats - NA/Erangel</div>
+        <div class="title sliding" style="text-transform:none;" id="dataHeader">PUBG Stats - NA/Erangel/PC</div>
       </div>
     </div>
 
     <div class="page-content">
 
-      <div class="card">
-          <div class="card-header">Change server/Map</div>
-          <div class="list no-hairlines-md">
-            <ul>
-              <li class="item-content item-input">
-                <div class="item-media">
-                  <i class="icon demo-list-icon"></i>
-                </div>
-                <div class="item-inner">
-                  <div class="item-title item-label"></div>
-                  <div class="item-input-wrap input-dropdown-wrap">
-                    <select placeholder="Please choose..." id="serverHome">
-                       <option value="na">NA</option>  
-                        <option value="eu">EU</option>  
-                        <option value="as">AS</option>  
-                        <option value="sa">SA</option>  
-                        <option value="oc">OC</option> 
-                    </select>
-                  </div>
-                  <div class="item-input-wrap input-dropdown-wrap">
-                    <select placeholder="Please choose..." id="mapHome">
-                      <option value="erangel">Erangel</option>  
-                      <option value="miramar">Miramar</option>  
-                      <option value="vikendi">Vikendi</option>  
-                      <option value="sanhok">Sanhok</option>  
-                    </select>
-                  </div>
-                </div>
-              </li>
-              <div class="card-footer">
-                <a class="button button-large button-fill" onclick="refreshData();">Update</a>
-              </div>  
-            </ul>
-          </div>    
-      </div>
+      <div class="list accordion-list">
+        <ul>
+          <li class="accordion-item">
 
+            <a href="#" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title">Change Settings</div>
+              </div>
+            </a>
+
+            <div class="accordion-item-content">
+              <div class="block">
+                
+                <div class="row" style="margin-bottom:1rem;">
+                   <input type="text" id="usernameHome" placeholder="Username...">
+                </div>
+
+                <div class="row" style="margin-bottom:1.5rem;">
+                  <div class="item-input-wrap input-dropdown-wrap">
+                    <select placeholder="Please choose..." id="platformHome" class="input-dropdown-wrap">
+                      <option value="steam">Steam</option>  
+                      <option value="xbox">Xbox</option>  
+                      <option value="psn">PSN</option>  
+                      <option value="kakao">Mobile</option>   
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row" style="margin-bottom:1.5rem;">
+                  <a class="button button-large button-fill" onclick="refreshData();" style="width:95%;margin-left:2.5%;">Update</a>
+                </div>  
+
+              </div>
+            </div>
+
+          </li>
+        </ul>
+      </div>  
+
+      <!--
       <div class="card">
         <div class="card-header">Total players now</div>
         <div class="card-content card-content-padding" style="font-size:2rem;">188820 players</div>
@@ -73,8 +77,18 @@
         <div class="card-header">SQUAD lobby time</div>
         <div class="card-content card-content-padding" style="font-size:1.5rem;">FPP: 2 min - TPP 1 min</div>
         <div class="card-footer">Updated 02-03-2019 - 18:00:58</div>
-      </div>
+      </div> 
+       -->
 
+      <!-- <div class="card">
+        <div class="card-header">User data debug</div>
+        <div class="card-content card-content-padding" id="debugUserCard" style="font-size:1rem;">188820 players</div>
+      </div> -->
+
+      <div class="list links-list">
+        <div class="block-title">Matches list</div>
+        <ul id="userMatchesList"></ul>
+      </div>
 
     </div>
 

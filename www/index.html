@@ -64,7 +64,7 @@
             <div data-name="login" class="page no-navbar no-toolbar no-swipeback">
 
               <!-- Scrollable page content -->
-              <div class="page-content login-screen-content">
+              <div class="page-content">
                 <div class="indexPage">
 
                   <div class="row">
@@ -75,11 +75,11 @@
                     <div class="col-100"><p>A open source App with PUBG Stats</p></div>
                   </div>  
 
-                  <div class="row">
+                  <div class="row" style="margin-top:-2rem;">
                     <div class="col-100"><img src="img/pubg-logo.png" /></div>
                   </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-100">
                       <div class="list no-hairlines-md">
                         <ul>
@@ -128,6 +128,45 @@
                         </ul>
                       </div>    
                     </div>
+                  </div>-->
+
+                  <div class="row" style="margin-top:-2rem;width:90%;margin-left:5%;">
+                    <div class="col-100">
+                      <div class="list no-hairlines-md">
+                        <ul>
+                          <li class="item-content item-input">
+                            <div class="item-inner">
+                              <div class="item-title item-label">Select platform</div>
+                              <div class="item-input-wrap input-dropdown-wrap">
+                                <select placeholder="Please choose..." id="platformIndex">
+                                  <option value="steam">Steam</option>  
+                                  <option value="xbox">Xbox</option>  
+                                  <option value="psn">PSN</option>  
+                                  <option value="kakao">Mobile</option>    
+                                </select>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>    
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:-4rem;width:90%;margin-left:5%;">
+                    <div class="col-100">
+                      <div class="list no-hairlines-md">
+                        <ul>
+                          <li class="item-content item-input">
+                            <div class="item-inner">
+                              <div class="item-title item-label">Username</div>
+                              <div class="item-input-wrap">
+                               <input type="text" id="usernameIndex" value="fabbbyu">
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>    
+                    </div>
                   </div>
 
                   <div class="row" style="margin-bottom: 2rem;">
@@ -146,6 +185,7 @@
       <script type="text/javascript" src="framework7/js/framework7.min.js"></script>
       <!-- <script type="text/javascript" src="cordova.js"></script> -->
       <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmMBfpi-GcWG7F6JMBpqTKH_ULQAXtj3M"></script> -->
+      <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="js/scripts.js"></script>
       <script type="text/javascript" src="js/index.js"></script>
     </body>

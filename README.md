@@ -8,7 +8,7 @@ Basically you need to clone our project and enjoy!
 
 ### Prerequisites
 
-A web server like Xampp 
+A web server
 
 ### Installing
 
@@ -19,6 +19,7 @@ Put de files in your web server
 
 * [Apache Cordova](https://cordova.apache.org/) - The mobile framework used
 * [Framerwok 7](https://maven.apache.org/) - HTML framework for layout and navigation
+* [jQuery](https://jquery.com/) - jQuery Framework
 * [PUBG Api](https://rometools.github.io/rome/) - Api used to read the data
 
 ## Contributing
