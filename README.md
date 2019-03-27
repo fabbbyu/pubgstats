@@ -1,6 +1,6 @@
 # PUBG Stats
 
-A open-source PUBG stats for lobby
+A open-source PUBG stats
 
 ## Getting Started
 
